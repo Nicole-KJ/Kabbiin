@@ -1,0 +1,54 @@
+/* FILE: src/styles.css */
+/* Importaciones de fuentes globales */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons+Outlined');
+
+body { margin: 0; font-family: 'Inter', sans-serif; }
+
+/* TOOLTIP FLOTANTE NATIVO (Versión Estable) */
+.kabin-tooltip-floating {
+    position: fixed; /* Flota respecto a la ventana */
+    z-index: 999999; /* Por encima de todo */
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    min-width: 240px;
+    
+    /* Sombra de calidad "Apple" */
+    box-shadow: 
+        0 10px 30px -5px rgba(0, 0, 0, 0.2), 
+        0 4px 6px -2px rgba(0,0,0,0.05);
+    border: 1px solid #E2E8F0;
+    
+    font-family: 'Inter', sans-serif;
+    
+    /* Animación de entrada */
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.2s ease-out, transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    
+    pointer-events: none; /* Importante para que no estorbe al mouse */
+}
+
+/* Header del Tooltip */
+.kabin-tooltip-floating .tt-header {
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    border-bottom: 1px solid #F1F5F9; 
+    padding-bottom: 8px; 
+    margin-bottom: 10px;
+}
+.kabin-tooltip-floating .tt-name { font-size: 0.95rem; font-weight: 800; color: #0F172A; }
+.kabin-tooltip-floating .tt-badge { padding: 3px 8px; border-radius: 6px; font-size: 0.7rem; font-weight: 700; color: white; text-transform: uppercase; }
+
+/* Cuerpo */
+.kabin-tooltip-floating .tt-body { display: flex; flex-direction: column; gap: 6px; }
+.kabin-tooltip-floating .tt-row { font-size: 0.85rem; color: #64748B; display: flex; justify-content: space-between; }
+.kabin-tooltip-floating .tt-row strong { color: #1E293B; font-weight: 700; }
+
+/* Pie */
+.kabin-tooltip-floating .tt-footer {
+    margin-top: 12px; padding-top: 8px; border-top: 1px solid #F1F5F9;
+    font-size: 0.75rem; color: #2563EB; font-weight: 700; text-align: right;
+}

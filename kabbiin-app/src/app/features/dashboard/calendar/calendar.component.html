@@ -1,0 +1,105 @@
+<div class="calendar-wrapper">
+  
+  <div class="cal-header">
+     <div class="nav-group">
+        <button class="nav-icon" (click)="handlePrev()"><</button>
+        <span class="date-display">{{ currentTitle }}</span>
+        <button class="nav-icon" (click)="handleNext()">></button>
+     </div>
+
+     <div class="view-group">
+        <button [class.active]="currentView === 'resourceTimelineWeek'" (click)="changeView('resourceTimelineWeek')">Semana</button>
+        <button [class.active]="currentView === 'resourceTimelineMonth'" (click)="changeView('resourceTimelineMonth')">Mes</button>
+        <button [class.active]="currentView === 'resourceTimelineYear'" (click)="changeView('resourceTimelineYear')">Año</button>
+     </div>
+  </div>
+
+  <div class="fc-container">
+     <full-calendar #calendar [options]="calendarOptions"></full-calendar>
+  </div>
+
+  <div class="modal-overlay" *ngIf="isModalOpen">
+    <div class="modal-content large-modal">
+      <div class="modal-header">
+        <h3>{{ selectedReservation.id ? 'Editar Reserva' : 'Nueva Reserva' }}</h3>
+        <button class="close-btn" (click)="closeModal()">×</button>
+      </div>
+      
+      <div class="modal-body" *ngIf="selectedReservation">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>HUÉSPED / TÍTULO</label>
+            <input type="text" [(ngModel)]="selectedReservation.title" placeholder="Ej. Familia Smith">
+          </div>
+          <div class="form-group">
+            <label>CABAÑA</label>
+            <select [(ngModel)]="selectedReservation.resourceId">
+              <option *ngFor="let c of calendarOptions.resources" [value]="c.id">{{ c.title }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-grid three-cols">
+          <div class="form-group">
+            <label>LLEGADA</label>
+            <input type="date" [ngModel]="formatDateForInput(selectedReservation.start)" (ngModelChange)="updateStartDate($event)">
+          </div>
+          <div class="form-group">
+            <label>NOCHES</label>
+            <input type="number" [(ngModel)]="selectedReservation.extendedProps.nights" min="1">
+          </div>
+          <div class="form-group">
+            <label>PERSONAS</label>
+            <input type="text" [(ngModel)]="selectedReservation.extendedProps.guests">
+          </div>
+        </div>
+
+        <div class="form-grid three-cols">
+          <div class="form-group">
+            <label>PRECIO X NOCHE</label>
+            <input type="number" [(ngModel)]="selectedReservation.extendedProps.price">
+          </div>
+          <div class="form-group">
+            <label>TOTAL ESTIMADO</label>
+            <div class="input-readonly">
+              ₡ {{ calculateTotal() | number }}
+            </div>
+          </div>
+          <div class="form-group">
+            <label>FORMA DE PAGO</label>
+            <select [(ngModel)]="selectedReservation.extendedProps.paymentMethod">
+              <option *ngFor="let method of paymentMethods" [value]="method">{{ method }}</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="form-grid">
+           <div class="form-group">
+              <label>ORIGEN</label>
+              <select [(ngModel)]="selectedReservation.extendedProps.source">
+                 <option value="Directo">Directa (Manual)</option>
+                 <option value="Airbnb">Airbnb</option>
+                 <option value="Booking">Booking.com</option>
+                 <option value="Expedia">Expedia</option>
+              </select>
+           </div>
+           <div class="form-row-check" style="margin-top: 24px;">
+             <input type="checkbox" id="evCheck" [(ngModel)]="selectedReservation.extendedProps.hasElectricCar">
+             <label for="evCheck">
+               <strong>Vehículo Eléctrico</strong><br>
+               <small>Requiere carga</small>
+             </label>
+           </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button *ngIf="selectedReservation.id" class="btn-delete" (click)="deleteReservation()">Eliminar</button>
+        <div class="footer-actions">
+           <button class="btn-cancel" (click)="closeModal()">Cancelar</button>
+           <button class="btn-primary" (click)="saveReservation()">Guardar Reserva</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

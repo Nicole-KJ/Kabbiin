@@ -1,0 +1,50 @@
+/* Contenedor del perfil */
+.user-profile {
+  padding: 20px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #fff;
+}
+
+.avatar-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #00838f; /* Un color bonito */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name { font-weight: 500; font-size: 14px; }
+.user-role { font-size: 10px; color: #00838f; font-weight: bold; letter-spacing: 0.5px; }
+
+/* Botón de acción */
+.action-container {
+  padding: 0 16px 16px 16px;
+}
+
+.new-res-btn {
+  width: 100%;
+  height: 48px;
+  font-size: 15px;
+}
+
+/* Ajustes de la lista */
+.active-link {
+  background-color: #e0f7fa !important; /* Color cuando está seleccionado */
+  color: #006064 !important;
+  border-right: 3px solid #006064;
+}
+
+.divider {
+  margin: 8px 0 !important;
+}

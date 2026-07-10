@@ -1,0 +1,35 @@
+<div class="user-profile">
+  <div class="avatar-circle">ES</div>
+  <div class="user-info">
+    <span class="user-name">Esteban Admin</span>
+    <span class="user-role">PROPIETARIO</span>
+  </div>
+</div>
+
+<div class="action-container">
+    <button mat-raised-button color="primary" class="btn-nueva" (click)="crearNuevaReserva()">
+        <mat-icon>add</mat-icon>
+        Nueva Reserva
+    </button>
+</div>
+
+<mat-nav-list class="nav-list">
+  
+  <a mat-list-item 
+     *ngFor="let item of menuItems" 
+     [routerLink]="item.route" 
+     routerLinkActive="active-link"
+     class="menu-item">
+    
+    <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+    <span matListItemTitle>{{ item.label }}</span>
+  </a>
+
+  <mat-divider class="divider"></mat-divider>
+  
+  <a mat-list-item class="logout-item">
+    <mat-icon matListItemIcon color="warn">logout</mat-icon>
+    <span matListItemTitle>Salir</span>
+  </a>
+
+</mat-nav-list>
