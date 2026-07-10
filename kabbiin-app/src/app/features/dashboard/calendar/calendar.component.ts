@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, inject, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; 
+import { FormsModule } from '@angular/forms';
 import { FullCalendarModule, FullCalendarComponent } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -14,7 +14,7 @@ import { CalendarService } from '../../../core/services/calendar.service';
   selector: 'app-calendar',
   standalone: true,
   imports: [CommonModule, FullCalendarModule, FormsModule],
-  encapsulation: ViewEncapsulation.None, 
+  encapsulation: ViewEncapsulation.None,
   template: `
     <div class="calendar-wrapper">
       
@@ -198,24 +198,24 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
   calendarOptions: any = {
     plugins: [dayGridPlugin, interactionPlugin, resourceTimelinePlugin],
-    initialView: 'resourceTimelineMonth', 
+    initialView: 'resourceTimelineMonth',
     locale: esLocale,
     schedulerLicenseKey: 'CC-Attribution-NonCommercial-NoDerivatives',
-    headerToolbar: false, 
+    headerToolbar: false,
     resourceAreaHeaderContent: 'Cabaña',
     resourceAreaWidth: '240px',
     height: '100%', contentHeight: 'auto', expandRows: true,
-    
+
     views: {
       resourceTimelineMonth: { slotMinWidth: 38, slotLabelContent: (arg: any) => this.renderMonthHeader(arg) },
       resourceTimelineWeek: { duration: { weeks: 1 }, slotDuration: { days: 1 }, slotLabelContent: (arg: any) => this.renderWeekHeader(arg) },
       resourceTimelineYear: { duration: { years: 1 }, slotDuration: { months: 1 }, slotLabelContent: (arg: any) => this.renderYearHeader(arg) }
     },
-    
-    datesSet: (arg: any) => { 
-        if(arg.view.type === 'resourceTimelineYear') this.currentTitle = arg.view.currentStart.getFullYear().toString();
-        else this.currentTitle = arg.view.title;
-        this.currentView = arg.view.type;
+
+    datesSet: (arg: any) => {
+      if (arg.view.type === 'resourceTimelineYear') this.currentTitle = arg.view.currentStart.getFullYear().toString();
+      else this.currentTitle = arg.view.title;
+      this.currentView = arg.view.type;
     },
 
     resourceLabelContent: (arg: any) => {
@@ -227,7 +227,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
       this.showTooltip(info);
     },
     eventMouseLeave: () => {
-      this.hideTooltipTimeout = setTimeout(() => { this.removeTooltip(); }, 1500); 
+      this.hideTooltipTimeout = setTimeout(() => { this.removeTooltip(); }, 1500);
     },
     eventClick: (info: any) => { this.openEditModal(info.event); },
 
@@ -253,11 +253,11 @@ export class CalendarComponent implements OnInit, OnDestroy {
     // --- ESCUCHAR AL BOTÓN DEL SIDEBAR ---
     // Si tu servicio tiene openModal$ (como definimos en el Paso 1)
     if (this.calendarService.openModal$) {
-       this.sub.add(
-         this.calendarService.openModal$.subscribe(() => {
-           this.openNewReservation();
-         })
-       );
+      this.sub.add(
+        this.calendarService.openModal$.subscribe(() => {
+          this.openNewReservation();
+        })
+      );
     }
   }
 
@@ -278,12 +278,12 @@ export class CalendarComponent implements OnInit, OnDestroy {
       <div class="tt-action"><span>Clic para editar</span> <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
     `;
     el.onclick = () => { this.openEditModal(info.event); };
-    el.onmouseenter = () => { if(this.hideTooltipTimeout) clearTimeout(this.hideTooltipTimeout); };
+    el.onmouseenter = () => { if (this.hideTooltipTimeout) clearTimeout(this.hideTooltipTimeout); };
     el.onmouseleave = () => { this.hideTooltipTimeout = setTimeout(() => this.removeTooltip(), 1500); };
     document.body.appendChild(el);
     this.activeTooltip = el;
     const rect = info.el.getBoundingClientRect();
-    el.style.top = (rect.top - 10) + 'px'; 
+    el.style.top = (rect.top - 10) + 'px';
     el.style.left = (rect.left + 20) + 'px';
     requestAnimationFrame(() => { el.style.opacity = '1'; });
   }
@@ -321,7 +321,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
       if (event) {
         event.setProp('title', this.selectedReservation.title);
         event.setDates(startDate, endDate);
-        event.setResources([this.selectedReservation.resourceId]);
+        (event as any).setResources([this.selectedReservation.resourceId]);
         Object.keys(this.selectedReservation.extendedProps).forEach(key => { event.setExtendedProp(key, this.selectedReservation.extendedProps[key]); });
       }
     } else {
@@ -344,7 +344,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
   formatDateForInput(date: Date | string): string { if (!date) return ''; const d = new Date(date); return d.toISOString().split('T')[0]; }
   updateStartDate(val: string) { this.selectedReservation.start = new Date(val + 'T12:00:00'); }
-  calculateTotal(): number { return (Number(this.selectedReservation.extendedProps?.nights)||0) * (Number(this.selectedReservation.extendedProps?.price)||0); }
+  calculateTotal(): number { return (Number(this.selectedReservation.extendedProps?.nights) || 0) * (Number(this.selectedReservation.extendedProps?.price) || 0); }
   getReservationLabel(title: string, source: string): string {
     if (this.currentView === 'resourceTimelineMonth') { if (source.includes('booking')) return 'BK'; if (source.includes('airbnb')) return 'ArB'; return 'DR'; }
     return title;
@@ -353,14 +353,14 @@ export class CalendarComponent implements OnInit, OnDestroy {
   handlePrev() { this.calendarComponent.getApi().prev(); }
   handleNext() { this.calendarComponent.getApi().next(); }
   changeView(view: string) { this.currentView = view; this.calendarComponent.getApi().changeView(view); }
-  renderMonthHeader(arg: any) { const d = arg.date; const isW = (d.getDay()===0 || d.getDay()===6) ? 'is-weekend' : ''; const letter = d.toLocaleDateString('es-ES', { weekday: 'narrow' }); const num = d.getDate(); return { html: `<div class="month-stack ${isW}"><span class="month-letter">${letter}</span><span class="month-number">${num}</span></div>` }; }
-  renderWeekHeader(arg: any) { const d = arg.date; const isW = (d.getDay()===0 || d.getDay()===6) ? 'is-weekend' : ''; const text = d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric' }); return { html: `<div class="week-full-label ${isW}">${text}</div>` }; }
-  renderYearHeader(arg: any) { const text = arg.date.toLocaleDateString('es-ES', { month: 'short' }).replace('.',''); return { html: `<div class="year-header">${text}</div>` }; }
+  renderMonthHeader(arg: any) { const d = arg.date; const isW = (d.getDay() === 0 || d.getDay() === 6) ? 'is-weekend' : ''; const letter = d.toLocaleDateString('es-ES', { weekday: 'narrow' }); const num = d.getDate(); return { html: `<div class="month-stack ${isW}"><span class="month-letter">${letter}</span><span class="month-number">${num}</span></div>` }; }
+  renderWeekHeader(arg: any) { const d = arg.date; const isW = (d.getDay() === 0 || d.getDay() === 6) ? 'is-weekend' : ''; const text = d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric' }); return { html: `<div class="week-full-label ${isW}">${text}</div>` }; }
+  renderYearHeader(arg: any) { const text = arg.date.toLocaleDateString('es-ES', { month: 'short' }).replace('.', ''); return { html: `<div class="year-header">${text}</div>` }; }
   loadInitialEvents(resources: any[]) {
     const today = new Date(); const y = today.getFullYear(); const m = today.getMonth(); const d = today.getDate();
     this.calendarOptions.events = [
-        { id: '101', resourceId: resources[0]?.id || '1', title: 'Reserva Directa', start: new Date(y, m, d), end: new Date(y, m, d + 2), extendedProps: { source: 'Directo', price: 120000, guests: '2 Adultos', paymentMethod: 'Efectivo', nights: 2 } },
-        { id: '102', resourceId: resources[1]?.id || '2', title: 'Familia Smith', start: new Date(y, m, d - 1), end: new Date(y, m, d + 1), extendedProps: { source: 'Airbnb', price: 450000, guests: '4 Adultos', paymentMethod: 'Tarjeta', nights: 2 } }
+      { id: '101', resourceId: resources[0]?.id || '1', title: 'Reserva Directa', start: new Date(y, m, d), end: new Date(y, m, d + 2), extendedProps: { source: 'Directo', price: 120000, guests: '2 Adultos', paymentMethod: 'Efectivo', nights: 2 } },
+      { id: '102', resourceId: resources[1]?.id || '2', title: 'Familia Smith', start: new Date(y, m, d - 1), end: new Date(y, m, d + 1), extendedProps: { source: 'Airbnb', price: 450000, guests: '4 Adultos', paymentMethod: 'Tarjeta', nights: 2 } }
     ];
   }
 }
